@@ -3,115 +3,265 @@
  */
 package taller5;
 
+import java.util.Scanner;
+import java.text.DecimalFormat;
+
 public class App {
-    
+
     public static void main(String[] args) {
-        
+
         try {
-            
-        } 
-        
+
+            System.out.println(calcularIntentos());   ///intentos
+            Scanner teclado = new Scanner(System.in);
+
+            System.out.println(simular_ventas()); /// ventas
+
+            System.out.println(calcular_empaque(480));   ///  empaques 
+
+            System.out.print("Ingrese la cantidad de jugadores: ");
+            byte cant_jugadores = teclado.nextByte();                    //// jugar21
+            System.out.println(jugar_21(cant_jugadores, teclado));
+
+
+        } catch (Exception e) {
+            System.out.println("Ocurrio un error\n" + e);
+        }
+
+    }
+
+    /*
+     * 
+     * 1. Desarrolle un algoritmo e impleméntelo en Java que: le pida al usuario un
+     * número entero positivo
+     * entre 1000 y 9999. En un ciclo genere números de manera aleatoria y cuente
+     * los intentos que hizo antes
+     * de hallar el número exactamente.
+     * 
+     * 
+     */
+
+    public static String calcularIntentos() {
+
+        String txt_retornar = "";
+
+        try {
+
+            Scanner teclado = new Scanner(System.in);
+            int numero = 0, intentos = 0, numero_aleatorio = 0;
+            final int min = 1000, max = 9999;
+
+            System.out.print("Ingrese un numero entero positivo entre 1000 y 9999: ");
+            numero = teclado.nextInt();
+
+            while (numero < min || numero > max) {
+                System.out.print("Numero invalido, Ingrese un numero entero positivo entre 1000 y 9999: ");
+                numero = teclado.nextInt();
+            }
+
+            while (numero != numero_aleatorio) {
+                numero_aleatorio = (int) (Math.random() * (max - min)) + min;
+                intentos++;
+            }
+
+            txt_retornar = "Los intentos antes de hallar el numero fueron: " + intentos;
+
+        }
+
         catch (Exception e) {
-            // TODO: handle exception
+            return "Ocurrio un error";
+        }
+
+        return txt_retornar;
+    }
+
+    /*
+     * 
+     * 2. Se requiere una función en java que simule las ventas de tres años para un
+     * almacén. Para cada año, deberá generar
+     * un aleatorio para cada mes hasta completar los 12 meses. La función se
+     * llamará Simular_ventas, y debe retornar un String
+     * al final que muestre las ventas de cada año, así:
+     * 
+     * Año 1
+     * Ventas Mes 1: $##.###.###
+     * :
+     * Ventas Mes 12: $##.###.###
+     * Total ventas Año 1: $##.###.###
+     * 
+     * Año 2
+     * Ventas Mes 1: $##.###.###
+     * :
+     * Ventas Mes 12: $##.###.###
+     * Total ventas Año 2: $##.###.###
+     * 
+     * Año 3
+     * Ventas Mes 1: $##.###.###
+     * :
+     * Ventas Mes 12: $##.###.###
+     * Total ventas Año 3: $##.###.###
+     * 
+     * Investigue sobre la clase DecimalFormat para mostrar bien la salida.
+     * import java.text.DecimalFormat;
+     * DecimalFormat form_pesos = new DecimalFormat("$#,###.00");
+     * 
+     * 
+     * 
+     */
+
+    public static String simular_ventas() {
+
+        try {
+            String txt_retornar = "";
+            int ventas_mes = 0, ventas_total_ano = 0;
+            final byte mesesF = 12, anosF = 3, cero = 0;
+            DecimalFormat form_pesos = new DecimalFormat("$#,###.00");
+
+            for (int i = 1; i <= anosF; i++) {
+                txt_retornar += "Año " + i + "\n";
+                for (int j = 1; j <= mesesF; j++) {
+                    ventas_mes = (int) (Math.random() * 10000000);
+                    ventas_total_ano += ventas_mes;
+                    txt_retornar += "Ventas Mes " + j + ": " + form_pesos.format(ventas_mes) + "\n";
+                }
+                txt_retornar += "Total ventas Año " + i + ": " + form_pesos.format(ventas_total_ano) + "\n" + "\n";
+                ventas_total_ano = cero;
+            }
+
+            return txt_retornar;
+        }
+
+        catch (Exception e) {
+            return "Ocurrio un error";
+        }
+
+    }
+
+    // ***************************
+
+    /*
+     * 
+     * 3. En una fábrica se tiene el siguiente patrón de empaque: En una estiba(o
+     * pallet) caben 16 cajas y en cada caja,
+     * caben 30 bombillas. Desarrolle una función que se llame: Calcular_empaque
+     * que: reciba como argumento la cantidad de
+     * bombillas que se deben empacar y a partir de allí: calcule cuántas cajas
+     * necesita, cuántas estibas o pallets necesita.
+     * Luego escriba lo siguiente:
+     * 
+     * Para ### bombillas, se necesitan ## cajas y ## pallets. Se quedan ###
+     * bombillas sin empacar. Se empacará así:
+     * 
+     * Pallet 1 --> Caja1, Caja2……,Caja16
+     * Pallet2 --> Caja17, Caja18…..Caja 32
+     * .
+     * Pallet n -- > Caja m, caja m+1…..
+     * 
+     * La función retornará un texto, con la información anterior. Pruebe la función
+     * llamándola desde el programa principal:
+     * solicite al usuario el número de bombillas e invoque la función para imprimir
+     * en el main, los resultados.
+     * 
+     */
+
+    public static String calcular_empaque(int bombillos) {
+        try {
+            StringBuilder texto = new StringBuilder();
+            final byte BombillasxCaja = 30;
+            final byte CajasxEstiba = 16;
+
+            double totalCajas = (short) (bombillos / BombillasxCaja);
+            double resto_bombillas = (short) (bombillos - totalCajas * BombillasxCaja);
+            double total_estiba = Math.ceil(totalCajas / CajasxEstiba);
+
+            texto.append(String.format(
+                    "Para %s bombillas, se necesitan %s cajas y %s pallets. Se quedan %s bombillas sin empacar.\nSe empacará así:\n",
+                    bombillos, totalCajas, total_estiba, resto_bombillas));
+
+            byte n_pallet = 1;
+            byte c_pallet = 16;
+            for (int i = 1; i <= totalCajas; i++) {
+                if (c_pallet == CajasxEstiba) {
+                    texto.append(String.format("\nPallet %s => ", n_pallet));
+                    n_pallet++;
+                    c_pallet = 0;
+                }
+                texto.append(String.format("Caja %s, ", i));
+                c_pallet += 1;
+            }
+            return texto.toString();
+        } catch (Exception e) {
+            return "Ha ocurrido un error\n" + e;
         }
     }
 
-
     /*
-    
-        1.	Desarrolle un algoritmo e impleméntelo en Java que: le pida al usuario un número entero positivo 
-        entre 1000 y 9999. En un ciclo genere números de manera aleatoria y cuente los intentos que hizo antes 
-        de hallar el número exactamente.
-        
-    
-    */ 
+     * 
+     * 
+     * 4. En un juego, cada jugador tiene 3 intentos para sacar cartas de una
+     * baraja. Las cartas van numeradas entre 1 y 10.
+     * Una función Jugar_21, deberá simular el juego para una cantidad de usuarios
+     * que enviará el usuario desde el main entre 1 y 6.
+     * 
+     * Para cada uno de los jugadores, el programa le calculará 3 cartas al azar y
+     * al final imprimirá el juego para cada jugador basado en las siguientes
+     * reglas:
+     * 
+     * Si saca 21 exactos: juego perfecto
+     * Si saca más de 21: se pasó
+     * Si saca menos de 21: faltaron puntos
+     * 
+     * La función deberá imprimir los puntos de cada jugador junto con la regla
+     * anterior, como muestra el ejemplo:
+     * 
+     * Jugador X, puntos 21 -- > juego perfecto
+     * Jugador Y, puntos 26 -- > se pasó
+     * .
+     * .
+     * 
+     * 
+     */
 
+    public static String jugar_21(byte cant_jugadores, Scanner teclado) {
 
+        try {
 
+            String txt_retornar = "";
+            int cartas = 0, puntosF = 0;
+            final byte min = 1, max = 10, cero = 0,
+                    min_j = 1, max_j = 6, intent_x_j = 3;
 
-    /* 
-     
-        2.	Se requiere una función en java que simule las ventas de tres años para un almacén. Para cada año, deberá generar 
-        un aleatorio para cada mes hasta completar los 12 meses. La función se llamará Simular_ventas, y debe retornar un String 
-        al final que muestre las ventas de cada año, así:
-        
-            Año 1
-            Ventas Mes 1: $##.###.###
-            :
-            Ventas Mes 12: $##.###.###
-            Total ventas Año 1:  $##.###.###
-            
-            Año 2
-            Ventas Mes 1: $##.###.###
-            :
-            Ventas Mes 12: $##.###.###
-            Total ventas Año 2: $##.###.###
-            
-            Año 3
-            Ventas Mes 1: $##.###.###
-            :
-            Ventas Mes 12: $##.###.###
+            while (cant_jugadores < min_j || cant_jugadores > max_j) {
+                System.out.print("La cantidad de jugadores debe estar entre 1 y 6, Ingrese nuevamente la cantidad de jugadores: ");
+                cant_jugadores = teclado.nextByte();
+            }
 
-            Total ventas Año 3: $##.###.###
-            
-            Investigue sobre la clase DecimalFormat para mostrar bien la salida. 
-            import java.text.DecimalFormat;
-            DecimalFormat form_pesos = new DecimalFormat("$#,###.00");
+            for (byte i = 1; i <= cant_jugadores; i++) {
 
-        
-      
-    */
+                for (short j = 1; j <= intent_x_j; j++) {
+                    cartas = (int) (Math.random() * (max - min)) + min;
+                    puntosF += cartas;
+                }
 
-    
+                if (puntosF < 21) {
+                    txt_retornar += "Jugador " + i + ", " + "Puntos: " + puntosF + " -- > Faltaron puntos" + "\n";
+                } else if (puntosF == 21) {
+                    txt_retornar += "Jugador " + i + ", " + "Puntos: " + puntosF + " -- > Juego perfecto" + "\n";
+                } else
+                    txt_retornar += "Jugador " + i + ", " + "Puntos: " + puntosF + " -- > Se pasó" + "\n";
 
+                puntosF = cero;
 
+            }
 
-    /*  
-     
-        3.	En una fábrica se tiene el siguiente patrón de empaque: En una estiba(o pallet) caben 16  cajas y en cada caja, 
-        caben 30 bombillas. Desarrolle una función que se llame: Calcular_empaque que: reciba como argumento la cantidad de 
-        bombillas que se deben empacar y a partir de allí: calcule cuántas cajas necesita, cuántas estibas o pallets necesita. 
-        Luego escriba lo siguiente: 
+            return txt_retornar;
 
-        Para ### bombillas, se necesitan ## cajas y ## pallets. Se quedan ### bombillas sin empacar. Se empacará así:
+        }
 
-        Pallet 1 --> Caja1, Caja2……,Caja16
-        Pallet2 -->  Caja17, Caja18…..Caja 32
-        .
-        Pallet n -- > Caja m, caja m+1…..
-        
-        La función retornará un texto, con la información anterior. Pruebe la función llamándola desde el programa principal: solicite al usuario el número de bombillas e invoque la función para imprimir en el main, los resultados.
+        catch (Exception e) {
+            return "Ocurrio un error";
+        }
 
-
-
-    */
-
-
-
-    
-
-    /* 
-    
-
-        4.	En un juego, cada jugador tiene 3 intentos para sacar cartas de una baraja. Las cartas van numeradas entre 1 y 10. 
-        Una función Jugar_21, deberá simular el juego para una cantidad de usuarios que enviará el usuario desde el main entre 1 y 6.
-
-        Para cada uno de los jugadores, el programa le calculará 3 cartas al azar y al final imprimirá el juego para cada jugador basado en las siguientes reglas: 
-        
-        Si saca 21 exactos: juego perfecto
-        Si saca más de 21: se pasó
-        Si saca menos de 21: faltaron puntos
-
-        La función deberá imprimir los puntos de cada jugador junto con la regla anterior, como muestra el ejemplo:
-
-        Jugador X, puntos 21 -- > juego perfecto
-        Jugador Y, puntos 26 -- > se pasó
-        .
-        .
-
-
-    */
-
-
+    }
 
 }
